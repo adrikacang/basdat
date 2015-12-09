@@ -1,16 +1,4 @@
-<?php
-	require_once('database.php');
-	try {
-		$results = $db->query('select * from sikoper.produk');
-		$items = $results->fetchAll(PDO::FETCH_ASSOC);
-		$transactionID = $db->query('select (MAX(id)+1) from sikoper.pembelian_produk');
-	}
-	catch (Exception $e) {
-		echo $e->getMessage();
-	}
-?>
-
-
+<!-- tes front end -->
 <!DOCTYPE html>
 
 <head>
@@ -21,6 +9,7 @@
 
 	<title>Pembelian Barang</title>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -33,26 +22,22 @@
 </head>
 
 <body id="home">
-	<?php echo "$transactionID";
-		echo $POST_['AnggotaID'];
-		echo "Tanggal";
-	?>
-	<table class='table table-bordered'>
-		<thead>
-			<tr><td>Kode Produk</td> <td>Nama Produk</td> <td>Stock</td> <td>HargaSatuan</td> <td>Kuantitas</td> <td>Beli</td> </tr>
-		</thead>
-		<tbody>
-			<?php
-				foreach ($items as  $item) {
-					echo "<tr><td>$item.kodeProduk</td><td>$item.namaProduk</td><td>$item.jmlStock</td><td>$item.harga </td> <td> <input name='kuantitas'> </td><td><button class = 'btn'>Beli</button></td></tr>";				
-				}
-			?>
-		</tbody>
-	</table>
+	<div class="container">
+		<h2>Bordered Table</h2>
+  		<p>Silahkan pesan disini</p> 
+		<table class='table table-bordered'>
+			<thead>
+				<tr><th>Kode Produk</th> <th>Nama Produk</th> <th>Stock</th> <th>HargaSatuan</th> <th>Kuantitas</th> <th>Beli</th> </th>
+			</thead>
+			<tbody>
+				<tr><td>$item.kodeProduk</td><td>$item.namaProduk</td><td>$item.jmlStock</td><td>$item.harga </td> <td> <input name='kuantitas'> </td><td><button id = 'h'class = 'btn btn-default'>Beli</button></td></tr>
+				<tr><td>$item.kodeProduk</td><td>$item.namaProduk</td><td>$item.jmlStock</td><td>$item.harga </td> <td> <input name='kuantitas'> </td><td><button class = 'btn btn-default'>Beli</button></td></tr>
+				<tr><td>$item.kodeProduk</td><td>$item.namaProduk</td><td>$item.jmlStock</td><td>$item.harga </td> <td> <input name='kuantitas'> </td><td><button class = 'btn btn-default'>Beli</button></td></tr>
+			</tbody>
+		</table>
 
-	<button class="btn btn-primary btn-lg" >Pesan</button>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<button class="btn btn-primary btn-lg" >Pesan</button>
+	</div>
 	
 	<script>
 
@@ -60,25 +45,32 @@
 
 
 		$(document).ready(function(){
-			$(".btn btn-default").click(function() {
-				$(this).toggleClass("btn btn-success");
+			alert("tes");
+			$(".btn-default").click(function() {
+				console.log("tombol baru di klick");
+				$(this).toggleClass("btn btn-success btn-md");
 				$(this).prop('disabled', true);
-				var baris = $(this).parent().get(0);
+				var baris = $(this).parents().get(1);
 				var anak = baris.children;
+				/*
+				alert(baris.innerHTML);
+				alert(anak[4].children[0].value);
+				alert(anak[0].innerHTML);
+				*/
 				barang = {
 					kodeProduk : anak[0].innerHTML,
 					namaProduk :  anak[1].innerHTML,
 					jmlStock : anak[2].innerHTML,
 					harga : anak[3].innerHTML,
-					kuantitas : anak[4].innerHTML
+					kuantitas : anak[4].children[0].value
 				};
 				array.push(barang); //masukin ke array buat di encode ke JSON terus kirim ke PHP
 			}); //end $(".btn btn-default").click(function()
-			$(".btn btn-primary btn-lg").click(function() {
+			$(".btn-primary").click(function() {
 				var x = JSON.stringify(array);
 				sessionStorage.setItem('jsondata',x);
 				alert(x);
-				window.location.assign("konfirmasipembelianbarang.php");
+				//window.location.assign("konfirmasipembelian.php");
 			}); // end $(".btn btn-primary btn-lg").click(function()
 		}); //end document.ready(function)
 
